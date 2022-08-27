@@ -37,7 +37,7 @@ def get_data_from_gcs():
         GCSから取得した過去のデータのDataframe
     '''
     bucket = storage_client.get_bucket(const.DATA_BUCKET_NAME)
-    blob = bucket.blob(const.ALL_PATH)
+    blob = bucket.blob(const.CHART_PATH)
     df = pd.read_csv(BytesIO(blob.download_as_string()), index_col=0)
 
     return df
