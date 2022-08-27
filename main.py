@@ -11,4 +11,4 @@ def main(event, context):
 
     df_recent = get_recent_data()
     df = create_new_data(df_recent)
-    save_data(df, const.DATA_BUCKET_NAME, const.ALL_PATH)
+    save_data(df, const.DATA_BUCKET_NAME, const.CHART_PATH)

@@ -27,17 +27,24 @@ def save_data(df, bucket_name, filepath):
     blob.upload_from_string(df.to_csv())
 
 
-def get_data_from_gcs():
+def get_data_from_gcs(bucket_name, filepath):
     '''
-    GCSから過去のデータを取得
+    GCSからデータを取得
+
+    Parameters
+    -----------
+    bucket_name : string
+        取得先のバケット名
+    filepath : string
+        ファイルのパス
 
     Returns
     -----------
     df : Dataframe
-        GCSから取得した過去のデータのDataframe
+        GCSから取得したデータのDataframe
     '''
-    bucket = storage_client.get_bucket(const.DATA_BUCKET_NAME)
-    blob = bucket.blob(const.CHART_PATH)
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(filepath)
     df = pd.read_csv(BytesIO(blob.download_as_string()), index_col=0)
 
     return df
@@ -57,7 +64,7 @@ def create_new_data(df_recent):
     df : Dataframe
         既存データのと新しいデータを合わせたDataframe
     '''
-    df_gcs = get_data_from_gcs()
+    df_gcs = get_data_from_gcs(const.DATA_BUCKET_NAME, const.CHART_PATH)
     df = pd.concat([df_gcs, df_recent]).drop_duplicates()
 
     return df
